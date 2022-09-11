@@ -22,3 +22,9 @@ def good_morning(name):
     if name:
         return f'Good morning, {name}!'
     return 'Good morning!'
+
+
+@app.route('/bank', methods={'DELETE'})
+def bank():
+    """Route with specific HTTP method."""
+    return 'Contente deleted!'
