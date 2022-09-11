@@ -13,3 +13,12 @@ def hello():
 def welcome(name):
     """Route with mandatory parameter."""
     return f'Welcome {name}!'
+
+
+@app.route('/goodmorning', defaults={'name': None})
+@app.route('/goodmorning/<string:name>')
+def good_morning(name):
+    """Route with optional parameter."""
+    if name:
+        return f'Good morning, {name}!'
+    return 'Good morning!'
