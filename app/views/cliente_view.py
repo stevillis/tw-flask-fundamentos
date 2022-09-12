@@ -31,6 +31,7 @@ def bank():
     return 'Contente deleted!'
 
 
+@app.route('/', defaults={'name': None}, methods={'GET'})
 @app.route('/<string:name>', methods={'GET'})
 def home(name):
     """Home view."""
