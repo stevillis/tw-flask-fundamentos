@@ -1,6 +1,7 @@
 """Cliente view."""
 
 from app import app
+from flask import render_template
 
 
 @app.route('/hello')
@@ -28,3 +29,10 @@ def good_morning(name):
 def bank():
     """Route with specific HTTP method."""
     return 'Contente deleted!'
+
+
+@app.route('/', defaults={'name': None}, methods={'GET'})
+@app.route('/<string:name>', methods={'GET'})
+def home(name):
+    """Home view."""
+    return render_template('clientes/home.html', user_name=name)
