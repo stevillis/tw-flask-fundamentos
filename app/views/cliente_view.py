@@ -31,7 +31,7 @@ def bank():
     return 'Contente deleted!'
 
 
-@app.route('/', methods={'GET'})
-def home():
+@app.route('/<string:name>', methods={'GET'})
+def home(name):
     """Home view."""
-    return render_template('clientes/home.html')
+    return render_template('clientes/home.html', user_name=name)
