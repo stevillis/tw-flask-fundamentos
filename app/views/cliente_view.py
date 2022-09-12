@@ -1,38 +1,49 @@
 """Cliente view."""
 
 from app import app
+from app.forms import cliente_form
 from flask import render_template
 
 
-@app.route('/hello')
-def hello():
-    """Hello world view."""
-    return 'Hello, world from Flask!'
+@app.route('/cadastrar_cliente', methods={'GET', 'POST'})
+def cadastrar_cliente():
+    """View for create cliente."""
+    form = cliente_form.ClienteForm()
+
+    return render_template('clientes/form.html', form=form)
 
 
-@app.route('/welcome/<string:name>')
-def welcome(name):
-    """Route with mandatory parameter."""
-    return f'Welcome {name}!'
+# ----- Examples -----
+
+# @app.route('/hello')
+# def hello():
+#     """Hello world view."""
+#     return 'Hello, world from Flask!'
 
 
-@app.route('/goodmorning', defaults={'name': None})
-@app.route('/goodmorning/<string:name>')
-def good_morning(name):
-    """Route with optional parameter."""
-    if name:
-        return f'Good morning, {name}!'
-    return 'Good morning!'
+# @app.route('/welcome/<string:name>')
+# def welcome(name):
+#     """Route with mandatory parameter."""
+#     return f'Welcome {name}!'
 
 
-@app.route('/bank', methods={'DELETE'})
-def bank():
-    """Route with specific HTTP method."""
-    return 'Contente deleted!'
+# @app.route('/goodmorning', defaults={'name': None})
+# @app.route('/goodmorning/<string:name>')
+# def good_morning(name):
+#     """Route with optional parameter."""
+#     if name:
+#         return f'Good morning, {name}!'
+#     return 'Good morning!'
 
 
-@app.route('/', defaults={'name': None}, methods={'GET'})
-@app.route('/<string:name>', methods={'GET'})
-def home(name):
-    """Home view."""
-    return render_template('clientes/home.html', user_name=name)
+# @app.route('/bank', methods={'DELETE'})
+# def bank():
+#     """Route with specific HTTP method."""
+#     return 'Contente deleted!'
+
+
+# @app.route('/', defaults={'name': None}, methods={'GET'})
+# @app.route('/<string:name>', methods={'GET'})
+# def home(name):
+#     """Home view."""
+#     return render_template('clientes/home.html', user_name=name)

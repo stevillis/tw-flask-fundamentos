@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro de Cliente</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
+    />
+  </head>
+  <body>
+    <form method="post">
+      <div class="form-group">
+        <label for="nome">Nome</label>
+        {{ form.nome(class="form-control") }}
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        {{ form.email(class="form-control") }}
+      </div>
+      <div class="form-group">
+        <label for="data_nascimento">Data de Nascimento</label>
+        {{ form.data_nascimento(class="form-control") }}
+      </div>
+      <div class="form-group">
+        <label for="profissao">Profissão</label>
+        {{ form.profissao(class="form-control") }}
+      </div>
+      <div class="form-group">
+        <label for="sexo">Sexo</label>
+        {{ form.sexo(class="form-control") }}
+      </div>
+    </form>
+  </body>
+</html>
