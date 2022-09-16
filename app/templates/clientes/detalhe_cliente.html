@@ -1,0 +1,17 @@
+{% extends "clientes/base.html" %}
+{% block title %}
+Detalhes de Cliente
+{% endblock title %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">Detalhes de Cliente</div>
+    <div class="card-body">
+        <h5>Nome: {{ cliente.nome }}</h5>
+        <h5>Email: {{ cliente.email }}</h5>
+        <h5>Data de Nascimento: {{ cliente.data_nascimento.strftime("%d/%m/%Y") }}</h5>
+        <h5>Profissão: {{ cliente.profissao }}</h5>
+        <h5>Sexo: {{ cliente.sexo }}</h5>
+    </div>
+</div>
+{% endblock content %}

@@ -44,6 +44,13 @@ def listar_clientes():
     clientes = cliente_model.Cliente.query.all()
     return render_template('clientes/lista_clientes.html', clientes=clientes)
 
+
+@app.route("/detalhe_cliente/<int:pk>")
+def detalhe_cliente(pk: int):  # pylint: disable=invalid-name
+    """View detail of a cliente."""
+    cliente = cliente_model.Cliente.query.filter_by(id=pk).first()
+    return render_template('clientes/detalhe_cliente.html', cliente=cliente)
+
 # ----- Examples -----
 
 # @app.route('/hello')
