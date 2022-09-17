@@ -1,7 +1,6 @@
 """Cliente view."""
 
-
-from flask import redirect, render_template, url_for
+from flask import redirect, render_template, request, url_for
 
 from app import app, db
 from app.entities import cliente as cliente_entity
@@ -26,7 +25,7 @@ def get_cliente_from_form(form) -> cliente_entity.Cliente:
     )
 
 
-@app.route('/cadastrar_cliente', methods=['GET', 'POST'])
+@app.route("/cadastrar_cliente", methods=["GET", "POST"])
 def cadastrar_cliente():
     """View for create cliente."""
     form = cliente_form.ClienteForm()
@@ -43,34 +42,38 @@ def cadastrar_cliente():
         try:
             db.session.add(cliente_db)
             db.session.commit()
-            return redirect(url_for('listar_clientes'))
+            return redirect(url_for("listar_clientes"))
         except Exception as e:  # pylint: disable=invalid-name, broad-except
-            print('Cliente não cadastrado.', e)
+            print("Cliente não cadastrado.", e)
     else:
         print(form.errors)
 
     return render_template(
-        'clientes/form.html',
+        "clientes/form.html",
         form=form,
-        action='insert'
+        action="insert"
     )
 
 
-@app.route('/listar_clientes', methods=['GET'])
+@app.route("/listar_clientes", methods=["GET"])
 def listar_clientes():
     """View list of clientes."""
-    clientes = cliente_model.Cliente.query.all()
-    return render_template('clientes/lista_clientes.html', clientes=clientes)
+    clientes_db = cliente_model.Cliente.query.all()
+    return render_template("clientes/lista_clientes.html", clientes=clientes_db)
 
 
-@app.route("/detalhe_cliente/<int:pk>", methods=['GET'])
+@app.route("/detalhe_cliente/<int:pk>", methods=["GET"])
 def detalhe_cliente(pk: int):  # pylint: disable=invalid-name
     """View detail of a cliente."""
-    cliente = cliente_model.Cliente.query.filter_by(id=pk).first()
-    return render_template('clientes/detalhe_cliente.html', cliente=cliente)
+    cliente_db = cliente_model.Cliente.query.filter_by(id=pk).first()
+    return render_template(
+        "clientes/detalhe_cliente.html",
+        cliente=cliente_db,
+        action='detail'
+    )
 
 
-@app.route("/editar_cliente/<int:pk>", methods=['GET', 'POST'])
+@app.route("/editar_cliente/<int:pk>", methods=["GET", "POST"])
 def editar_cliente(pk: int):  # pylint: disable=invalid-name
     """View edit cliente."""
     cliente_db = cliente_model.Cliente.query.filter_by(id=pk).first()
@@ -87,47 +90,67 @@ def editar_cliente(pk: int):  # pylint: disable=invalid-name
 
         try:
             db.session.commit()
-            return redirect(url_for('listar_clientes'))
+            return redirect(url_for("listar_clientes"))
         except Exception as e:  # pylint: disable=invalid-name, broad-except
             print("Não foi possível editar o cliente.", e)
 
     return render_template(
         "clientes/form.html",
         form=form,
-        action='edit'
+        action="edit"
+    )
+
+
+@app.route("/remover_cliente/<int:pk>", methods=["GET", "POST"])
+def remover_cliente(pk: int):  # pylint: disable=invalid-name
+    """View remove cliente."""
+    cliente_db = cliente_model.Cliente.query.filter_by(id=pk).first()
+
+    if request.method == "POST":
+        try:
+            db.session.delete(cliente_db)
+            db.session.commit()
+            return redirect(url_for("listar_clientes"))
+        except Exception as e:  # pylint: disable=invalid-name, broad-except
+            print("Não foi possível remover o cliente.", e)
+
+    return render_template(
+        "clientes/detalhe_cliente.html",
+        cliente=cliente_db,
+        action='delete'
     )
 
 # ----- Examples -----
 
-# @app.route('/hello')
+# @app.route("/hello")
 # def hello():
 #     """Hello world view."""
-#     return 'Hello, world from Flask!'
+#     return "Hello, world from Flask!"
 
 
-# @app.route('/welcome/<string:name>')
+# @app.route("/welcome/<string:name>")
 # def welcome(name):
 #     """Route with mandatory parameter."""
-#     return f'Welcome {name}!'
+#     return f"Welcome {name}!"
 
 
-# @app.route('/goodmorning', defaults={'name': None})
-# @app.route('/goodmorning/<string:name>')
+# @app.route("/goodmorning", defaults={"name": None})
+# @app.route("/goodmorning/<string:name>")
 # def good_morning(name):
 #     """Route with optional parameter."""
 #     if name:
-#         return f'Good morning, {name}!'
-#     return 'Good morning!'
+#         return f"Good morning, {name}!"
+#     return "Good morning!"
 
 
-# @app.route('/bank', methods={'DELETE'})
+# @app.route("/bank", methods={"DELETE"})
 # def bank():
 #     """Route with specific HTTP method."""
-#     return 'Contente deleted!'
+#     return "Contente deleted!"
 
 
-# @app.route('/', defaults={'name': None}, methods={'GET'})
-# @app.route('/<string:name>', methods={'GET'})
+# @app.route("/", defaults={"name": None}, methods={"GET"})
+# @app.route("/<string:name>", methods={"GET"})
 # def home(name):
 #     """Home view."""
-#     return render_template('clientes/home.html', user_name=name)
+#     return render_template("clientes/home.html", user_name=name)

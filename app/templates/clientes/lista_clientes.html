@@ -22,10 +22,15 @@
       <td>{{ cliente.profissao }}</td>
       <td>
         <a href="{{ url_for('editar_cliente', pk=cliente.id) }}">Editar</a>
-        <a href="#">Excluir</a>
+        <a href="{{ url_for('remover_cliente', pk=cliente.id) }}">Excluir</a>
       </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<div class="text-center">
+  <a href="{{ url_for('cadastrar_cliente') }}" class="btn btn-primary">Cadastrar</a>
+</div>
+
 {% endblock content %}

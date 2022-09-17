@@ -1,17 +1,43 @@
 {% extends "clientes/base.html" %}
+
 {% block title %}
+{% if action == 'detail' %}
 Detalhes de Cliente
+{% else %}
+Remover Cliente
+{% endif %}
 {% endblock title %}
 
 {% block content %}
 <div class="card">
+    {% if action == 'detail' %}
     <div class="card-header">Detalhes de Cliente</div>
+    {% else %}
+    <div class="card-header">
+        Tem certeza que deseja remover este cliente?
+        <span class="small">Esta ação não poderá ser desfeita.</span>
+    </div>
+    {% endif %}
     <div class="card-body">
         <h5>Nome: {{ cliente.nome }}</h5>
         <h5>Email: {{ cliente.email }}</h5>
-        <h5>Data de Nascimento: {{ cliente.data_nascimento.strftime("%d/%m/%Y") }}</h5>
+        <h5>
+            Data de Nascimento: {{ cliente.data_nascimento.strftime("%d/%m/%Y") }}
+        </h5>
         <h5>Profissão: {{ cliente.profissao }}</h5>
         <h5>Sexo: {{ cliente.sexo }}</h5>
+    </div>
+
+    <div class="text-center p-2">
+        {% if action == 'delete' %}
+        <form method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <a href="{{ url_for('listar_clientes') }}" class="btn btn-secondary">Cancelar</a>
+            <button class="btn btn-danger" type="submit">Remover</button>
+        </form>
+        {% else %}
+        <a href="{{ url_for('listar_clientes') }}" class="btn btn-secondary">Voltar</a>
+        {% endif %}
     </div>
 </div>
 {% endblock content %}
