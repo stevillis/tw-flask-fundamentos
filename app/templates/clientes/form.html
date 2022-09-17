@@ -1,38 +1,67 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cadastro de Cliente</title>
+{% extends "clientes/base.html" %}
 
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
-    />
-  </head>
-  <body>
-    <form method="post">
-      <div class="form-group">
-        <label for="nome">Nome</label>
-        {{ form.nome(class="form-control") }}
-      </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        {{ form.email(class="form-control") }}
-      </div>
-      <div class="form-group">
-        <label for="data_nascimento">Data de Nascimento</label>
-        {{ form.data_nascimento(class="form-control") }}
-      </div>
-      <div class="form-group">
-        <label for="profissao">Profissão</label>
-        {{ form.profissao(class="form-control") }}
-      </div>
-      <div class="form-group">
-        <label for="sexo">Sexo</label>
-        {{ form.sexo(class="form-control") }}
-      </div>
-    </form>
-  </body>
-</html>
+{% block title %}
+{% if action == 'insert' %}
+Cadastrar Cliente
+{% else %}
+Editar Cliente
+{% endif %}
+{% endblock title %}
+
+{% block content %}
+<h2 class="text-center p-2">
+  {% if action == 'insert' %}
+  Cadastrar Cliente
+  {% else %}
+  Editar Cliente
+  {% endif %}
+</h2>
+<form method="post">
+  {{ form.csrf_token }}
+  <div class="form-group">
+    <label for="nome">Nome</label>
+    {{ form.nome(class="form-control") }} {% if form.errors.nome %}
+    <div class="alert alert-danger">{{ form.errors.nome }}</div>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    <label for="email">Email</label>
+    {{ form.email(class="form-control") }} {% if form.errors.email %}
+    <div class="alert alert-danger">{{ form.errors.email }}</div>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    <label for="data_nascimento">Data de Nascimento</label>
+    {{ form.data_nascimento(class="form-control") }} {% if
+    form.errors.data_nascimento %}
+    <div class="alert alert-danger">{{ form.errors.data_nascimento }}</div>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    <label for="profissao">Profissão</label>
+    {{ form.profissao(class="form-control") }} {% if form.errors.profissao %}
+    <div class="alert alert-danger">{{ form.errors.profissao }}</div>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    <label for="sexo">Sexo</label>
+    {{ form.sexo(class="form-control") }} {% if form.errors.sexo %}
+    <div class="alert alert-danger">{{ form.errors.sexo }}</div>
+    {% endif %}
+  </div>
+
+  <div class="text-center">
+    <a href="{{ url_for('listar_clientes') }}" class="btn btn-secondary">Cancelar</a>
+
+    {% if action == 'insert' %}
+    <button class="btn btn-primary" type="submit">
+      Cadastrar
+    </button>
+    {% else %}
+    <button class="btn btn-success" type="submit">
+      Salvar
+    </button>
+    {% endif %}
+  </div>
+</form>
+{% endblock content %}

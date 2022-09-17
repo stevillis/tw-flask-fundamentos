@@ -1,14 +1,17 @@
-from app import db
+"""Cliente model related."""
 from sqlalchemy_utils import ChoiceType
+
+from app import db
 
 
 class Cliente(db.Model):
+    """Cliente model definition."""
     __tablename__ = 'clientes'
 
     SEXO_CHOICES = [
-        (U'M', u'Masculino'),
-        (U'F', u'Feminino'),
-        (U'N', u'Nenhuma das opções'),
+        ('M', 'Masculino'),
+        ('F', 'Feminino'),
+        ('N', 'Nenhuma das opções'),
     ]
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
