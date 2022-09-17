@@ -2,10 +2,11 @@
 
 from flask import redirect, render_template, request, url_for
 
-from app import app, db
+from app import app
 from app.entities import cliente as cliente_entity
 from app.forms import cliente_form
 from app.models import cliente_model
+from app.services import cliente_service
 
 
 def get_cliente_from_form(form) -> cliente_entity.Cliente:
@@ -39,12 +40,8 @@ def cadastrar_cliente():
             sexo=cliente_data.sexo,
         )
 
-        try:
-            db.session.add(cliente_db)
-            db.session.commit()
+        if cliente_service.insert_cliente(cliente_db):
             return redirect(url_for("listar_clientes"))
-        except Exception as e:  # pylint: disable=invalid-name, broad-except
-            print("Cliente não cadastrado.", e)
     else:
         print(form.errors)
 
@@ -58,14 +55,17 @@ def cadastrar_cliente():
 @app.route("/listar_clientes", methods=["GET"])
 def listar_clientes():
     """View list of clientes."""
-    clientes_db = cliente_model.Cliente.query.all()
-    return render_template("clientes/lista_clientes.html", clientes=clientes_db)
+    clientes_db = cliente_service.get_all_clientes()
+    return render_template(
+        "clientes/lista_clientes.html",
+        clientes=clientes_db
+    )
 
 
 @app.route("/detalhe_cliente/<int:pk>", methods=["GET"])
 def detalhe_cliente(pk: int):  # pylint: disable=invalid-name
     """View detail of a cliente."""
-    cliente_db = cliente_model.Cliente.query.filter_by(id=pk).first()
+    cliente_db = cliente_service.get_cliente_by_id(pk)
     return render_template(
         "clientes/detalhe_cliente.html",
         cliente=cliente_db,
@@ -76,23 +76,14 @@ def detalhe_cliente(pk: int):  # pylint: disable=invalid-name
 @app.route("/editar_cliente/<int:pk>", methods=["GET", "POST"])
 def editar_cliente(pk: int):  # pylint: disable=invalid-name
     """View edit cliente."""
-    cliente_db = cliente_model.Cliente.query.filter_by(id=pk).first()
+    cliente_db = cliente_service.get_cliente_by_id(pk)
     form = cliente_form.ClienteForm(obj=cliente_db)
 
     if form.validate_on_submit():
         cliente_data = get_cliente_from_form(form)
 
-        cliente_db.nome = cliente_data.nome
-        cliente_db.email = cliente_data.email
-        cliente_db.data_nascimento = cliente_data.data_nascimento
-        cliente_db.profissao = cliente_data.profissao
-        cliente_db.sexo = cliente_data.sexo
-
-        try:
-            db.session.commit()
+        if cliente_service.edit_cliente(cliente_db, cliente_data):
             return redirect(url_for("listar_clientes"))
-        except Exception as e:  # pylint: disable=invalid-name, broad-except
-            print("Não foi possível editar o cliente.", e)
 
     return render_template(
         "clientes/form.html",
@@ -104,15 +95,11 @@ def editar_cliente(pk: int):  # pylint: disable=invalid-name
 @app.route("/remover_cliente/<int:pk>", methods=["GET", "POST"])
 def remover_cliente(pk: int):  # pylint: disable=invalid-name
     """View remove cliente."""
-    cliente_db = cliente_model.Cliente.query.filter_by(id=pk).first()
+    cliente_db = cliente_service.get_cliente_by_id(pk)
 
     if request.method == "POST":
-        try:
-            db.session.delete(cliente_db)
-            db.session.commit()
+        if cliente_service.delete_cliente(cliente_db):
             return redirect(url_for("listar_clientes"))
-        except Exception as e:  # pylint: disable=invalid-name, broad-except
-            print("Não foi possível remover o cliente.", e)
 
     return render_template(
         "clientes/detalhe_cliente.html",

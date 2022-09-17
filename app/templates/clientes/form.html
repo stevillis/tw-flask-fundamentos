@@ -9,15 +9,15 @@ Editar Cliente
 {% endblock title %}
 
 {% block content %}
+<h2 class="text-center p-2">
+  {% if action == 'insert' %}
+  Cadastrar Cliente
+  {% else %}
+  Editar Cliente
+  {% endif %}
+</h2>
 <form method="post">
   {{ form.csrf_token }}
-  <h2 class="text-center p-2">
-    {% if action == 'insert' %}
-    Cadastrar Cliente
-    {% else %}
-    Editar Cliente
-    {% endif %}
-  </h2>
   <div class="form-group">
     <label for="nome">Nome</label>
     {{ form.nome(class="form-control") }} {% if form.errors.nome %}
