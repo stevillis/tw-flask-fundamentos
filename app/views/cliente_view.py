@@ -79,6 +79,9 @@ def editar_cliente(pk: int):  # pylint: disable=invalid-name
     cliente_db = cliente_service.get_cliente_by_id(pk)
     form = cliente_form.ClienteForm(obj=cliente_db)
 
+    if request.method == 'GET':
+        form.sexo.data = cliente_db.sexo
+
     if form.validate_on_submit():
         cliente_data = get_cliente_from_form(form)
 
