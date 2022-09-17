@@ -1,0 +1,39 @@
+{% extends "clientes/base.html" %}
+
+{% block title %} Lista de Clientes {% endblock title %}
+
+{% block content %}
+<h2 class="text-center p-2">
+  Lista de Clientes
+</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Data de Nascimento</th>
+      <th>Profissão</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for cliente in clientes%}
+    <tr>
+      <td>
+        <a href="{{ url_for('detalhe_cliente', pk=cliente.id) }}">{{ cliente.nome }}</a>
+      </td>
+      <td>{{ cliente.data_nascimento }}</td>
+      <td>{{ cliente.profissao }}</td>
+      <td>
+        <a href="{{ url_for('editar_cliente', pk=cliente.id) }}">Editar</a>
+        <a href="{{ url_for('remover_cliente', pk=cliente.id) }}">Excluir</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="text-center">
+  <a href="{{ url_for('cadastrar_cliente') }}" class="btn btn-primary">Cadastrar</a>
+</div>
+
+{% endblock content %}
