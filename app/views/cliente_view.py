@@ -52,7 +52,7 @@ def cadastrar_cliente():
     )
 
 
-@app.route("/listar_clientes", methods=["GET"])
+@app.route("/", methods=["GET"])
 def listar_clientes():
     """View list of clientes."""
     clientes_db = cliente_service.get_all_clientes()
